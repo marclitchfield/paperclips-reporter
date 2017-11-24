@@ -13,7 +13,7 @@ Create a firebase database and obtain the following credentials:
 
 Now create a bookmark to launch the recorder script within a game of Universal Paperclips. Replace the values in the config object with your firebase credentials:
 
-```
+```javascript
 javascript: (() => {
   window.firebase_config = {
     apiKey: "YOUR_API_KEY",
