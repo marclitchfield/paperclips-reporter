@@ -15,7 +15,7 @@
     if (window.__paperclips_reporter_firebase_config === undefined) {
       throw 'firebase_config not set'
     }
-    firebase.initializeApp(window.firebase_config);
+    firebase.initializeApp(window.__paperclips_reporter_firebase_config);
 
     const game = getGame(firebase);
     const metrics = game.child('metrics');
@@ -23,7 +23,7 @@
     const sessionTimeOffset = parseInt(window.localStorage.getItem(TIME_OFFSET)) || 0;
     const sessionStartTimestamp = Date.now();
 
-    console.log(`Starting reporter. Saving metrics to ${databaseURL}`);
+    console.log(`Starting reporter. Saving metrics to ${window.__paperclips_reporter_firebase_config.databaseURL}`);
     window.__paperclips_reporter_interval_id = setInterval(collectMetrics(
       metrics, sessionTimeOffset, sessionStartTimestamp), 10000);
   }
