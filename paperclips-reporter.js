@@ -12,7 +12,7 @@
   document.getElementsByTagName("head")[0].appendChild(firebaseScript);
 
   function onScriptLoaded() {
-    if (window.firebase_config === undefined) {
+    if (window.__paperclips_reporter_firebase_config === undefined) {
       throw 'firebase_config not set'
     }
     firebase.initializeApp(window.firebase_config);
@@ -23,7 +23,9 @@
     const sessionTimeOffset = parseInt(window.localStorage.getItem(TIME_OFFSET)) || 0;
     const sessionStartTimestamp = Date.now();
 
-    setInterval(collectMetrics(metrics, sessionTimeOffset, sessionStartTimestamp), 5000);
+    console.log(`Starting reporter. Saving metrics to ${databaseURL}`);
+    window.__paperclips_reporter_interval_id = setInterval(collectMetrics(
+      metrics, sessionTimeOffset, sessionStartTimestamp), 10000);
   }
 
   function getGame(firebase) {
@@ -87,15 +89,25 @@
         metricData = {...metricData,
           probeTrust: window.probeTrust,
           probeCount: window.probeCount,
-          matterRemaining: window.totalMatter - window.foundMatter,
+          foundMatter: window.foundMatter,
           drifterCount: window.drifterCount,
-          honor: window.honor
+          factories: window.factoryLevel,
+          harvesters: window.harvesterLevel,
+          wireDrones: window.wireDroneLevel,
+          honor: window.honor,
+          exploredPct: parseFloat(el('colonizedDisplay').innerText)
         };
       }
       
       metric.set(metricData);
 
       window.localStorage.setItem(TIME_OFFSET, timeOffset);
+
+      // kill switch
+      if (document.getElementsByClassName('consoleOld')[0].innerText.includes('Universal Paperclips')) {
+        console.log('Game completed. Stopping reporter.')
+        clearInterval(window.__paperclips_reporter_interval_id);
+      }
     }
   }
 })();

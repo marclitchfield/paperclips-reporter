@@ -66,7 +66,10 @@
               {label: 'harvesters', data:[], yAxisID: 'left', ...datasetStyle(11)},
               {label: 'wireDrones', data:[], yAxisID: 'left', ...datasetStyle(12)},
               {label: 'honor', data:[], yAxisID: 'left', ...datasetStyle(13)},
-              {label: 'probeTrust', data:[], yAxisID: 'left', ...datasetStyle(14)}
+              {label: 'probeTrust', data:[], yAxisID: 'left', ...datasetStyle(14)},
+              {label: 'probeCount', data:[], yAxisID: 'left', ...datasetStyle(15)},
+              {label: 'drifterCount', data:[], yAxisID: 'left', ...datasetStyle(16)},
+              {label: 'exploredPct', data:[], yAxisID: 'left', ...datasetStyle(17)}
             ]
           },
           options: {
@@ -116,9 +119,11 @@
         const lastKey = Object.keys(game.metrics).slice(-1)[0];
 
         firebase.database().ref(`games/${gameKey}/metrics`).orderByKey().startAt(lastKey).on('child_added', (child) => {
-          const metrics = child.toJSON();
-          pushMetrics([metrics], chartConfig);
-          window.gameChart.update();
+          if (child.key !== lastKey) {
+            const metrics = child.toJSON();
+            pushMetrics([metrics], chartConfig);
+            window.gameChart.update();
+          }
         })
       });
     </script>

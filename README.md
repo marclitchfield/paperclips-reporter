@@ -15,7 +15,7 @@ Now create a bookmark to launch the recorder script within a game of Universal P
 
 ```javascript
 javascript: (() => {
-  window.firebase_config = {
+  window.__paperclips_reporter_firebase_config = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_AUTH_DOMAIN",
     databaseURL: "YOUR_DATABASE_URL",
