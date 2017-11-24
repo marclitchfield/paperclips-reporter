@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js" charset="utf-8"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script>
+      // ?apiKey=___&authDomain=___&databaseURL=___&projectId=___&storageBucket=___&messagingSenderId=___
+      const urlParams = new URLSearchParams(window.location.search);
+      const config = {
+        apiKey: urlParams.get('apiKey'),
+        authDomain: urlParams.get('authDomain'),
+        databaseURL: urlParams.get('databaseURL'),
+        projectId: urlParams.get('projectId'),
+        storageBucket: urlParams.get('storageBucket'),
+        messagingSenderId: urlParams.get('messagingSenderId')
+      };
+      firebase.initializeApp(config);
+
+      function pushMetrics(metrics, chartConfig) {
+        let first = true;
+        chartConfig.data.datasets.forEach(dataset => {
+          Object.keys(metrics).forEach(key => {
+            const metricValue = metrics[key][dataset.label];
+            dataset.data.push(metricValue || 0);
+            if (first) {
+              chartConfig.data.labels.push('T+' + Math.floor(metrics[key].timeOffset/1000/60) + ' min');
+            }
+          })
+          first = false;
+        });
+      }
+
+      function nextColor(index) {
+        return `hsla(${index*37},100%,60%,.9)`;
+      }
+
+      function datasetStyle(index, opts) {
+        return {
+          fill: false,
+          backgroundColor: nextColor(index),
+          borderColor: nextColor(index),
+          pointRadius: 0,
+          borderWidth: 1.8,
+          ...opts
+        }
+      }
+
+      firebase.database().ref('games').limitToLast(1).once('value', gameData => {
+        const chartConfig = {
+          type: 'line',
+          data: {
+            labels: [],
+            datasets: [
+              {label: 'clips', data:[], yAxisID: 'right', ...datasetStyle(0, {backgroundColor: '#fff', borderColor: '#fff'})},
+              {label: 'autoclippers', data:[], yAxisID: 'left', ...datasetStyle(0)},
+              {label: 'megaclippers', data:[], yAxisID: 'left', ...datasetStyle(1)},
+              {label: 'funds', data:[], yAxisID: 'left', ...datasetStyle(2)},
+              {label: 'investments', data:[], yAxisID: 'left', ...datasetStyle(3)},
+              {label: 'trust', data:[], yAxisID: 'left', ...datasetStyle(4)},
+              {label: 'memory', data:[], yAxisID: 'left', ...datasetStyle(5)},
+              {label: 'processors', data:[], yAxisID: 'left', ...datasetStyle(6)},
+              {label: 'operations', data:[], yAxisID: 'left', ...datasetStyle(7)},
+              {label: 'creativity', data:[], yAxisID: 'left', ...datasetStyle(8)},
+              {label: 'yomi', data:[], yAxisID: 'left', ...datasetStyle(9)},
+              {label: 'factories', data:[], yAxisID: 'left', ...datasetStyle(10)},
+              {label: 'harvesters', data:[], yAxisID: 'left', ...datasetStyle(11)},
+              {label: 'wireDrones', data:[], yAxisID: 'left', ...datasetStyle(12)},
+              {label: 'honor', data:[], yAxisID: 'left', ...datasetStyle(13)},
+              {label: 'probeTrust', data:[], yAxisID: 'left', ...datasetStyle(14)}
+            ]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              xAxes: [{
+                display: true,
+                gridLines: {
+                  color: '#333'
+                }
+              }],
+              yAxes: [{
+                display: true,
+                gridLines: {
+                  color: '#555'
+                },
+                id: 'left',
+                position: 'left',
+                type: 'logarithmic'
+              },
+              {
+                display: true,
+                id: 'right',
+                position: 'right',
+                type: 'linear'
+              }]
+            },
+            tooltips: {
+              position: 'nearest',
+              mode: 'index',
+              intersect: false,
+              yPadding: 10,
+              xPadding: 10,
+              caretSize: 8
+            }
+          }
+        }
+
+        const games = gameData.toJSON();
+        const gameKey = Object.keys(games)[0];
+        const game = games[gameKey];
+        pushMetrics(game.metrics, chartConfig);
+
+        const context = window.document.getElementById('chart').getContext('2d');
+        Chart.defaults.global.defaultFontColor = '#ddd';
+        window.gameChart = new Chart(context, chartConfig);
+        const lastKey = Object.keys(game.metrics).slice(-1)[0];
+
+        firebase.database().ref(`games/${gameKey}/metrics`).orderByKey().startAt(lastKey).on('child_added', (child) => {
+          const metrics = child.toJSON();
+          pushMetrics([metrics], chartConfig);
+          window.gameChart.update();
+        })
+      });
+    </script>
+    <style>
+      #chart {
+        background-color: #222;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <canvas id="chart"></canvas>
+    </div>
+  </body>
+</html>
