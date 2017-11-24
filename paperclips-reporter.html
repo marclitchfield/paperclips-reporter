@@ -21,7 +21,7 @@
         chartConfig.data.datasets.forEach(dataset => {
           Object.keys(metrics).forEach(key => {
             const metricValue = metrics[key][dataset.label];
-            dataset.data.push(metricValue || 0);
+            dataset.data.push(Math.max(0, metricValue || 0));
             if (first) {
               chartConfig.data.labels.push('T+' + Math.floor(metrics[key].timeOffset/1000/60) + ' min');
             }
