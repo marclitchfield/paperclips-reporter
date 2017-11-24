@@ -12,17 +12,10 @@
   document.getElementsByTagName("head")[0].appendChild(firebaseScript);
 
   function onScriptLoaded() {
-    // ?apiKey=___&authDomain=___&databaseURL=___&projectId=___&storageBucket=___&messagingSenderId=___
-    const urlParams = new URLSearchParams(window.location.search);
-    const config = {
-      apiKey: urlParams.get('apiKey'),
-      authDomain: urlParams.get('authDomain'),
-      databaseURL: urlParams.get('databaseURL'),
-      projectId: urlParams.get('projectId'),
-      storageBucket: urlParams.get('storageBucket'),
-      messagingSenderId: urlParams.get('messagingSenderId')
-    };
-    firebase.initializeApp(config);
+    if (window.firebase_config === undefined) {
+      throw 'firebase_config not set'
+    }
+    firebase.initializeApp(window.firebase_config);
 
     const game = getGame(firebase);
     const metrics = game.child('metrics');
