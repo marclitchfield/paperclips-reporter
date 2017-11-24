@@ -31,7 +31,7 @@
       }
 
       function nextColor(index) {
-        return `hsla(${index*37},100%,60%,.9)`;
+        return `hsla(${(index*37)%360},100%,60%,.9)`;
       }
 
       function datasetStyle(index, opts) {
