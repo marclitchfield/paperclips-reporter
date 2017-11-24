@@ -25,4 +25,4 @@ javascript: (function() { var a = document.createElement("script"); a.src = "htt
 
 Start a game of universal paperclips at http://www.decisionproblem.com/paperclips, and launch the bookmark to start recording metrics.
 
-To view the metrics, go to https://marclitchfield.github.io/paperclips-reporter/paperclips-reporter.html`<YOUR_QUERY_STRING>`
+To view the metrics, go to `https://marclitchfield.github.io/paperclips-reporter/paperclips-reporter.html<YOUR_QUERY_STRING>`
