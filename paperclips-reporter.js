@@ -104,7 +104,7 @@
       window.localStorage.setItem(TIME_OFFSET, timeOffset);
 
       // kill switch
-      if (document.getElementsByClassName('consoleOld')[0].innerText.includes('Universal Paperclips')) {
+      if (document.getElementsByClassName('consoleOld')[0].innerText.includes('by Frank Lantz')) {
         console.log('Game completed. Stopping reporter.')
         clearInterval(window.__paperclips_reporter_interval_id);
       }
