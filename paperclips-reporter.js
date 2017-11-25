@@ -25,7 +25,7 @@
 
     console.log(`Starting reporter. Saving metrics to ${window.__paperclips_reporter_firebase_config.databaseURL}`);
     window.__paperclips_reporter_interval_id = setInterval(collectMetrics(
-      metrics, sessionTimeOffset, sessionStartTimestamp), 15000);
+      metrics, sessionTimeOffset, sessionStartTimestamp), 10000);
   }
 
   function getGame(firebase) {

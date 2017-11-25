@@ -45,7 +45,7 @@
         }
       }
 
-      firebase.database().ref('games').limitToLast(1).once('value', gameData => {
+      fetch(config.databaseURL + '/games.json?shallow=true').then(response => response.json()).then(games => {
         const chartConfig = {
           type: 'line',
           data: {
@@ -107,22 +107,23 @@
           }
         }
 
-        const games = gameData.toJSON();
-        const gameKey = Object.keys(games)[0];
-        const game = games[gameKey];
-        pushMetrics(game.metrics, chartConfig);
+        const gameKey = Object.keys(games).slice(-1)[0];
 
         const context = window.document.getElementById('chart').getContext('2d');
         Chart.defaults.global.defaultFontColor = '#ddd';
-        window.gameChart = new Chart(context, chartConfig);
-        const lastKey = Object.keys(game.metrics).slice(-1)[0];
+        let timeoutId;
 
-        firebase.database().ref(`games/${gameKey}/metrics`).orderByKey().startAt(lastKey).on('child_added', (child) => {
-          if (child.key !== lastKey) {
-            const metrics = child.toJSON();
-            pushMetrics([metrics], chartConfig);
-            window.gameChart.update();
-          }
+        firebase.database().ref(`games/${gameKey}/metrics`).on('child_added', (child) => {
+          const metrics = child.toJSON();
+          pushMetrics([metrics], chartConfig);
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            if (!window.gameChart) {
+              window.gameChart = new Chart(context, chartConfig);
+            } else {
+              window.gameChart.update()
+            }
+          }, 500);
         })
       }, (err) => {
         console.error(err);
