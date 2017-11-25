@@ -25,7 +25,7 @@
 
     console.log(`Starting reporter. Saving metrics to ${window.__paperclips_reporter_firebase_config.databaseURL}`);
     window.__paperclips_reporter_interval_id = setInterval(collectMetrics(
-      metrics, sessionTimeOffset, sessionStartTimestamp), 10000);
+      metrics, sessionTimeOffset, sessionStartTimestamp), 15000);
   }
 
   function getGame(firebase) {
@@ -77,8 +77,6 @@
 
       if (exists('powerDiv')) {
         metricData = {...metricData,
-          availableMatter: window.availableMatter,
-          acquiredMatter: window.acquiredMatter,
           factories: window.factoryLevel,
           harvesters: window.harvesterLevel,
           wireDrones: window.wireDroneLevel,
@@ -89,13 +87,11 @@
         metricData = {...metricData,
           probeTrust: window.probeTrust,
           probeCount: window.probeCount,
-          foundMatter: window.foundMatter,
           drifterCount: window.drifterCount,
           factories: window.factoryLevel,
           harvesters: window.harvesterLevel,
           wireDrones: window.wireDroneLevel,
-          honor: window.honor,
-          exploredPct: parseFloat(el('colonizedDisplay').innerText)
+          honor: window.honor
         };
       }
       
