@@ -68,6 +68,10 @@
 
       if (exists('businessDiv')) {
         metricData = {...metricData,
+          avgRevenue: window.avgRev,
+          avgSales: window.avgSales,
+          demand: window.demand * 10,
+          marketing: window.marketingLvl,
           funds: window.funds,
           investments: window.portTotal,
           autoclippers: window.clipmakerLevel,
