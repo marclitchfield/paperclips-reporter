@@ -107,7 +107,7 @@
           }
         }
 
-        const gameKey = Object.keys(games).slice(-1)[0];
+        const gameKey = Object.keys(games).sort().slice(-1)[0];
 
         const context = window.document.getElementById('chart').getContext('2d');
         Chart.defaults.global.defaultFontColor = '#ddd';

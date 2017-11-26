@@ -33,6 +33,7 @@
     if (!gameKey) {
       const games = firebase.database().ref('games');
       const game = games.push();
+      game.set({ startTimestamp: Date.now() });
       window.localStorage.setItem(GAME_KEY, game.key);
       return game;
     }
