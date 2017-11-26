@@ -70,6 +70,7 @@
         metricData = {...metricData,
           avgRevenue: window.avgRev,
           avgSales: window.avgSales,
+          clipPrice: window.margin,
           demand: window.demand * 10,
           marketing: window.marketingLvl,
           funds: window.funds,
