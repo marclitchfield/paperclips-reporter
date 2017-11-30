@@ -70,6 +70,10 @@
     return document.getElementById(id);
   }
 
+  function val(id) {
+    return parseFloat(el(id).innerHTML.replace(/,/g, ''));
+  }
+
   function collectMetrics(metrics, sessionTimeOffset, sessionStartTimestamp) {
     return () => {
       const metric = metrics.push();
@@ -107,6 +111,11 @@
           factories: window.factoryLevel,
           harvesters: window.harvesterLevel,
           wireDrones: window.wireDroneLevel,
+          performance: val('performance'),
+          consumption: val('powerConsumptionRate'),
+          production: val('powerProductionRate'),
+          storedPower: val('storedPower'),
+          maxStorage: val('maxStorage')
         };
       }
 
