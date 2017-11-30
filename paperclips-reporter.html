@@ -3,6 +3,26 @@
   <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js" charset="utf-8"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <style>
+      #projects {
+        font-family: Tahoma;
+        color: #ddd;
+      }
+      #projects span {
+        display: inline-block;
+      }
+      #projects .timeOffset {
+        width: 6em;
+      }
+      #projects .description {
+        width: 40%;
+        color: #aaa;
+      }
+      #projects .message {
+        width: 30%;
+        color: #fff;
+      }
+    </style>
     <script>
       // ?apiKey=___&authDomain=___&databaseURL=___&projectId=___&storageBucket=___&messagingSenderId=___
       const urlParams = new URLSearchParams(window.location.search);
@@ -28,6 +48,16 @@
           })
           first = false;
         });
+      }
+
+      function pushProject(project) {
+        const markup = `
+          <span class="timeOffset">T+${Math.floor(project.timeOffset/1000/60)} min</span>
+          <span class="description">${project.description.replace(')', ') ')}</span>
+          <span class="message">${project.message}</span>`;
+        const projectElement = document.createElement('div');
+        projectElement.innerHTML = markup;
+        document.getElementById('projects').prepend(projectElement);
       }
 
       function nextColor(index) {
@@ -130,7 +160,13 @@
               window.gameChart.update()
             }
           }, 500);
+        });
+
+        firebase.database().ref(`games/${gameKey}/projects`).on('child_added', (child) => {
+          const project = child.toJSON();
+          pushProject(project);
         })
+
       }, (err) => {
         console.error(err);
       });
@@ -144,6 +180,7 @@
   <body>
     <div>
       <canvas id="chart"></canvas>
+      <div id="projects"></div>
     </div>
   </body>
 </html>

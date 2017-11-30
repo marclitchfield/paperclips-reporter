@@ -19,13 +19,33 @@
 
     const game = getGame(firebase);
     const metrics = game.child('metrics');
+    const projects = game.child('projects');
 
     const sessionTimeOffset = parseInt(window.localStorage.getItem(TIME_OFFSET)) || 0;
     const sessionStartTimestamp = Date.now();
 
+    interceptProjects(projects, sessionTimeOffset, sessionStartTimestamp);
+
     console.log(`Starting reporter. Saving metrics to ${window.__paperclips_reporter_firebase_config.databaseURL}`);
     window.__paperclips_reporter_interval_id = setInterval(collectMetrics(
       metrics, sessionTimeOffset, sessionStartTimestamp), 10000);
+  }
+
+  function interceptProjects(projects, sessionTimeOffset, sessionStartTimestamp) {
+    const displayProjects_target = window.displayProjects;
+    window.displayProjects = function(project) {
+      displayProjects_target.call(this, project);
+      const onclick_target = project.element.onclick;
+      project.element.onclick = function() {
+        onclick_target.call(this);
+        const newProject = projects.push();
+        newProject.set({
+          timeOffset: sessionTimeOffset + (Date.now() - sessionStartTimestamp),
+          description: project.element.innerText,
+          message: el('readout1').innerText
+        });
+      };
+    }
   }
 
   function getGame(firebase) {
@@ -113,4 +133,5 @@
       }
     }
   }
+
 })();
