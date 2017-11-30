@@ -6,20 +6,19 @@
     <style>
       #projects {
         font-family: Tahoma;
-        color: #ddd;
       }
-      #projects .timeOffset {
+      .project {
+        margin-bottom: 1em;
+      }
+      .project .timeOffset {
         color: hsl(38,50%,50%);
-        display: inline-block;
       }
-      #projects .description {
-        display: inline-block;
+      .project .description {
         color: #aaa;
       }
-      #projects .message {
+      .project .message {
         display: block;
         color: #fff;
-        margin-bottom: 1em;
       }
     </style>
     <script>
@@ -51,10 +50,13 @@
 
       function pushProject(project) {
         const markup = `
-          <span class="timeOffset">T+${Math.floor(project.timeOffset/1000/60)} min</span>
-          <span class="description">${project.description.replace(')', ') ')}</span>
+          <div class="header">
+            <span class="timeOffset">T+${Math.floor(project.timeOffset/1000/60)} min</span>
+            <span class="description">${project.description.replace(')', ') ')}</span>
+          </div>
           <span class="message">${project.message}</span>`;
         const projectElement = document.createElement('div');
+        projectElement.className = 'project';
         projectElement.innerHTML = markup;
         document.getElementById('projects').prepend(projectElement);
       }
