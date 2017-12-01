@@ -6,7 +6,7 @@ Record games of Universal Paperclips in firebase and render realtime metrics. Th
 Automatically complete the game with [paperclips-auto](https://github.com/marclitchfield/paperclips-auto)
 
 ## Setup
-Create a firebase database and obtain the following credentials:
+Create a firebase database at https://console.firebase.google.com/ and select 'Add firebase to your web app' to obtain the following credentials:
 
 * apiKey
 * authDomain
