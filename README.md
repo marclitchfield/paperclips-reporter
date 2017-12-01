@@ -1,8 +1,14 @@
 # paperclips-reporter
 Record games of Universal Paperclips in firebase and render realtime metrics. This repository contains a script that is injected into a game of Universal Paperclips via a bookmark. The script periodically captures game metrics and posts them to the configured firebase database. There is also a web page that can render a graph of the recorded game metrics.
 
-# Setup
-Create a firebase database and obtain the following credentials:
+[![Screenshot](/img/screenshot.png)](https://raw.githubusercontent.com/marclitchfield/paperclips-reporter/master/img/screenshot.png)
+
+Most major metrics in the game are captured. Metrics are plotted on a logarithmic scale, except for the paperclip count which is a linear scale on the right axis. A tooltip will show values under the cursor. Projects purchased in the game are also displayed.
+
+Automatically complete the game with [paperclips-auto](https://github.com/marclitchfield/paperclips-auto)
+
+## Setup
+Create a firebase database at https://console.firebase.google.com/ and select 'Add firebase to your web app' to obtain the following credentials:
 
 * apiKey
 * authDomain
