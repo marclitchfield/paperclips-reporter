@@ -5,7 +5,7 @@ Record games of Universal Paperclips in firebase and render realtime metrics. Th
 
 Automatically complete the game with [paperclips-auto](https://github.com/marclitchfield/paperclips-auto)
 
-# Setup
+## Setup
 Create a firebase database and obtain the following credentials:
 
 * apiKey
