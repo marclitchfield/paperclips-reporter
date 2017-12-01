@@ -111,6 +111,7 @@
           factories: window.factoryLevel,
           harvesters: window.harvesterLevel,
           wireDrones: window.wireDroneLevel,
+          inventory: window.unusedClips,
           performance: val('performance'),
           consumption: val('powerConsumptionRate'),
           production: val('powerProductionRate'),
