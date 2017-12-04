@@ -23,16 +23,8 @@
       }
     </style>
     <script>
-      // ?apiKey=___&authDomain=___&databaseURL=___&projectId=___&storageBucket=___&messagingSenderId=___
       const urlParams = new URLSearchParams(window.location.search);
-      const config = {
-        apiKey: urlParams.get('apiKey'),
-        authDomain: urlParams.get('authDomain'),
-        databaseURL: urlParams.get('databaseURL'),
-        projectId: urlParams.get('projectId'),
-        storageBucket: urlParams.get('storageBucket'),
-        messagingSenderId: urlParams.get('messagingSenderId')
-      };
+      const config = { databaseURL: urlParams.get('databaseURL') }
       firebase.initializeApp(config);
 
       function pushMetrics(metrics, chartConfig) {
@@ -75,6 +67,15 @@
           borderWidth: 1.4,
           ...opts
         }
+      }
+
+      function formatTick(value, index, values) {
+        const ticks = Math.floor(values.length / 16);
+        return index % ticks === 0 ? roundExponential(value) : '';
+      }
+
+      function roundExponential(value) {
+        return parseFloat(value.toString().replace(/(\d+(\.\d)).*(e[+-]\d+)/, '$1$3')).toExponential(1);
       }
 
       fetch(config.databaseURL + '/games.json?shallow=true').then(response => response.json()).then(games => {
@@ -130,13 +131,19 @@
                 },
                 id: 'left',
                 position: 'left',
-                type: 'logarithmic'
+                type: 'logarithmic',
+                ticks: {
+                  callback: formatTick
+                }
               },
               {
                 display: true,
                 id: 'right',
                 position: 'right',
-                type: 'linear'
+                type: 'linear',
+                ticks: {
+                  callback: roundExponential
+                }
               }]
             },
             tooltips: {

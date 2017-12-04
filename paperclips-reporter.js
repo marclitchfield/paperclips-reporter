@@ -5,6 +5,7 @@
 
   const GAME_KEY = 'reporter-game-key';
   const TIME_OFFSET = 'reporter-time-offset';
+  let reporterIntervalId;
 
   const firebaseScript = document.createElement('script');
   firebaseScript.src = 'https://www.gstatic.com/firebasejs/4.6.2/firebase.js';
@@ -27,7 +28,7 @@
     interceptProjects(projects, sessionTimeOffset, sessionStartTimestamp);
 
     console.log(`Starting reporter. Saving metrics to ${window.__paperclips_reporter_firebase_config.databaseURL}`);
-    window.__paperclips_reporter_interval_id = setInterval(collectMetrics(
+    reporterIntervalId = setInterval(collectMetrics(
       metrics, sessionTimeOffset, sessionStartTimestamp), 10000);
   }
 
@@ -139,7 +140,7 @@
       // kill switch
       if (document.getElementsByClassName('consoleOld')[0].innerText.includes('by Frank Lantz')) {
         console.log('Game completed. Stopping reporter.')
-        clearInterval(window.__paperclips_reporter_interval_id);
+        clearInterval(reporterIntervalId);
       }
     }
   }
